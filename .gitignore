@@ -1,0 +1,18 @@
+# Build output
+bin/
+obj/
+*.user
+*.suo
+
+# Emby SDK assemblies are never redistributed
+sdk/
+sdk-current/
+*.dll
+*.pdb
+
+# Local test evidence and packaging
+RetryTests/run.log
+RetryTests/verification.json
+ArchiveTests/*.log
+Tests/*.log
+dist/
