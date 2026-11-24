@@ -1,0 +1,88 @@
+<div id="EmbyHistoryPage" data-role="page" class="page type-interior pluginConfigurationPage"
+     data-require="emby-input,emby-button,emby-checkbox"
+     data-controller="__plugin/EmbyHistory.js">
+    <style>
+        #EmbyHistoryPage .eh-table { width: 100%; border-collapse: collapse; }
+        #EmbyHistoryPage .eh-table th,
+        #EmbyHistoryPage .eh-table td { padding: .35em .5em; text-align: left; vertical-align: middle; border-bottom: 1px solid rgba(128,128,128,.25); }
+        #EmbyHistoryPage .eh-table th { font-weight: 600; white-space: nowrap; }
+        #EmbyHistoryPage .eh-table select { width: 100%; max-width: 13em; font-size: .95em; }
+        #EmbyHistoryPage .eh-col-pick { width: 3.5em; }
+        #EmbyHistoryPage .eh-col-name { width: 30%; }
+        #EmbyHistoryPage .eh-col-target { width: 27%; }
+        #EmbyHistoryPage .eh-table tr.eh-off td { opacity: .45; }
+        #EmbyHistoryPage .eh-lib { font-weight: 500; }
+        #EmbyHistoryPage .eh-sub { font-size: .85em; opacity: .7; }
+        #EmbyHistoryPage .eh-missing { outline: 2px solid #c62828; outline-offset: 1px; }
+        #EmbyHistoryPage .eh-summary { margin: .6em 0 1.2em; }
+        #EmbyHistoryPage .eh-summary div { margin: .15em 0; }
+        #EmbyHistoryPage .eh-error { color: #c62828; }
+    </style>
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="EmbyHistoryForm">
+                <h2>永久入库历史</h2>
+                <p class="fieldDescription">
+                    勾选要监控的媒体库，并为每个源库选择“删除后历史卡片放进哪个历史库”。
+                    多个源库可以指向同一个历史库（多对一），一个历史库也可以挂多个归档目录。
+                </p>
+
+                <div class="checkboxContainer checkboxContainer-withDescription">
+                    <label>
+                        <input type="checkbox" id="Enabled">
+                        <span>启用记录和离线卡片生成</span>
+                    </label>
+                </div>
+
+                <h3>实时处理状态</h3>
+                <div id="HistoryStatus" role="status" aria-live="polite" class="eh-summary fieldDescription">
+                    正在读取处理状态…
+                </div>
+                <p class="fieldDescription">账本记录、归档写入和 Emby 索引刷新是三个独立阶段。定时账本对账不是全服媒体扫描；索引只有刷新任务实际返回才显示完成。</p>
+
+                <h3>监控与归档映射</h3>
+                <div id="SourceLoading" class="fieldDescription">正在读取媒体库列表…</div>
+                <div id="SourceTableWrap" style="display:none">
+                    <table class="eh-table">
+                        <thead>
+                            <tr>
+                                <th class="eh-col-pick">监控</th>
+                                <th class="eh-col-name">源媒体库</th>
+                                <th class="eh-col-target">归档到历史库</th>
+                                <th title="成人历史只有服务器所有者可见">分类</th>
+                                <th title="决定如何判断两条记录是同一部作品">识别</th>
+                                <th>权限</th>
+                            </tr>
+                        </thead>
+                        <tbody id="SourceRows"></tbody>
+                    </table>
+                </div>
+                <div id="MappingSummary" class="eh-summary fieldDescription"></div>
+
+                <div class="checkboxContainer checkboxContainer-withDescription">
+                    <label>
+                        <input type="checkbox" id="AllowEmptyReconcile">
+                        <span>整库为空时也推断移出（默认关闭，防止磁盘挂载故障被误判成整库删除）</span>
+                    </label>
+                </div>
+
+                <div class="fieldDescription">
+                    <p><strong>归档目录：</strong><code>/config/data/emby-history/archive/&lt;源库ID&gt;</code>。
+                        一个历史库可以挂多个源库目录；挂多个时要在库设置里开启“合并顶层文件夹”，否则库里会出现以数字命名的文件夹。</p>
+                    <p><strong>剧集库：</strong>勾选后按<strong>单集</strong>留史，归档为
+                        <code>剧名 (年份)/Season NN/剧名 - S01E05.disc</code>。
+                        目标历史库必须是<strong>混合内容</strong>或电视剧类型，电影类型的历史库装不了剧集卡片。</p>
+                    <p><strong>权限：</strong>“跟随源库”只对<strong>普通库</strong>生效，约每 10 分钟同步一次，只增删历史库那一个权限项。
+                        <strong>成人库一律只有服务器所有者可见</strong>，选“跟随源库”也会被忽略。</p>
+                    <p><strong>内容分类：</strong>新勾选的库默认按“成人”处理（最严格，只有你能看见）。确认是正常内容后再改成“普通”。</p>
+                    <p><strong>识别方式：</strong>番号（JAV 类）、作品 ID（TMDB/IMDb，普通电影）、本地记录（没有番号也没有作品 ID 的成人库）。
+                        改识别方式会让该库已记录条目按“同文件重新编号”处理，不会产生假的“已移出”。</p>
+                </div>
+
+                <button is="emby-button" type="submit" class="raised button-submit block">
+                    <span>保存</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

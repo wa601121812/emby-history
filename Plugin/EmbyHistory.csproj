@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>EmbyHistory</AssemblyName>
+    <RootNamespace>EmbyHistory</RootNamespace>
+    <Version>0.7.0</Version>
+    <EmbySdkDir Condition="'$(EmbySdkDir)' == ''">../sdk-current</EmbySdkDir>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Compile the small core into this DLL: no extra dependency to install. -->
+    <Compile Include="../Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <Reference Include="MediaBrowser.Common"><HintPath>$(EmbySdkDir)/MediaBrowser.Common.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="MediaBrowser.Controller"><HintPath>$(EmbySdkDir)/MediaBrowser.Controller.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="MediaBrowser.Model"><HintPath>$(EmbySdkDir)/MediaBrowser.Model.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="SkiaSharp"><HintPath>$(EmbySdkDir)/SkiaSharp.dll</HintPath><Private>false</Private></Reference>
+    <EmbeddedResource Include="Configuration/config.html" />
+    <EmbeddedResource Include="Configuration/config.js" />
+    <EmbeddedResource Include="Assets/removed-label.png" LogicalName="EmbyHistory.Assets.removed-label.png" />
+    <EmbeddedResource Include="Assets/plugin-icon.png" LogicalName="EmbyHistory.Assets.plugin-icon.png" />
+  </ItemGroup>
+</Project>
